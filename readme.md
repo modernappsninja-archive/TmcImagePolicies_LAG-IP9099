@@ -1,199 +1,168 @@
-**THIS GUIDE IS UNDER DEVELOPMENT AND MAY NOT BE FUNCTIONAL - THIS MESSAGE WILL BE REMOVED WHEN THE GUIDE IS READY FOR USE. IF YOU HAVE ANY QUESTIONS, PLEASE OPEN AN ISSUE TICKET. IF YOU WOULD LIKE TO CONTRIBUTE TO THIS GUIDE, PLEASE SUBMIT A PR WITH YOUR UPDATES, THANK YOU.** 
-
-**PLEASE DO NOT REMOVE ANYTHING ABOVE THIS LINE UNTIL YOUR GUIDE IS COMPLETE AND VALIDATED FOR END USER CONSUMPTION** 
-
-## ModernApps.ninja starter guide template 
-
-Please reference the content below for formatting examples, and replace with your desired content.
-# Lab Excercise Page Syle Template - 1st level - Main Header
+# Tanzu Mission Control - Image Policies Lab Guide
 
 **Contents:**
 
-- [Step 1: ]()
-- [Step 2: ]()
-- [Step 3: ]()
-- [Step 4: ]()
-- [Step 5: ]()
-- [Next Steps]()
+- [Tanzu Mission Control - Image Policies Lab Guide](#tanzu-mission-control---image-policies-lab-guide)
+  - [Introduction](#introduction)
+    - [Before Attempting This Lab:](#before-attempting-this-lab)
+    - [Environment Pre-Requisites](#environment-pre-requisites)
+  - [Lab Exercises](#lab-exercises)
+      - [Step 1: Go to the page of policies and select Image Policy](#step-1-go-to-the-page-of-policies-and-select-image-policy)
+      - [Step 2: create an image policy](#step-2-create-an-image-policy)
+        - [Step 2.1: Specify Wild Card matching](#step-21-specify-wild-card-matching)
+        - [Step 2.2: Specify port number](#step-22-specify-port-number)
+      - [Step 3: Deploying an application fails when the registry is not white listed](#step-3-deploying-an-application-fails-when-the-registry-is-not-white-listed)
+      - [Step 4: Deleting the application and image policy](#step-4-deleting-the-application-and-image-policy)
+      - [Step 5: Deploying an application succeeds when image policy is not present](#step-5-deploying-an-application-succeeds-when-image-policy-is-not-present)
+        - [Step 5.1: Deploy the application](#step-51-deploy-the-application)
+        - [Step 5.2: Validating that the application is functioning](#step-52-validating-that-the-application-is-functioning)
+        - [Step 5.3: Cleaning up the application and namespace](#step-53-cleaning-up-the-application-and-namespace)
+    - [Validate Lab Guide](#validate-lab-guide)
+    - [Thank you for completing the Tanzu Mission Control - Image Policies Lab Guide!](#thank-you-for-completing-the-tanzu-mission-control---image-policies-lab-guide)
 
-## Step 1: 2nd level header, steps often have multiple substeps and subsections
+## Introduction
 
-1.1 Uses dotted decimal numbering. This sentence 1.1 is a substep of step 1. Use a single decimal format for each substep that itself does not have other substeps. For substeps that have their own substeps, use a subsection format shown in steps 1.2 and 1.3
+Image Policy is a type of policy that regulates the behaviors of pulling images with a whitelist of image registry patterns that represent registry domains from which images are allowed to be pulled. This document is intended to provide a guide to exploring basic usages of image policies in TMC through its UI.
 
-This format is intended to find an optimal balance of usability for the user and flexibility and simplicity for content developers. As this paragraph demonstrates, its perfectly fine to add prose inline within each step as needed to sufficiently explain the step, keeping in mind that it is crucial for user experience to keep the document streamlined, and so recommend liberal use of hidden and expandable section blocks as shown below
+### Before Attempting This Lab:
 
-<details><summary>Click to expand</summary>
+This lab has a completion difficulty of `Partial`. Please see the rubrik below for an explanation of lab completion difficulty rankings
 
-If you have any long text sections such as detailed explanations, code examples, configuration files, etc, please wrap them in expanding sections as shown here.
+Lab Completion Difficulty Rankings:
 
-Keep in mind this template is optimized for Lab Exercise guides which generally include lots of tasks that the reader needs to do. 
+- Difficulty Levels:
+  - `Complete`
+    - A lab guide with a difficulty of `Complete` includes comprehensive, click-by-click instructions, usually with a screenshot for every command entered. Complete labs must be associated with an online lab environment fully prepped to execute the exact instructions provided in the lab guide. Most users could successfully execute the steps in a `Complete` lab guide, even if they do not have expertise in the subject, by following detailed instructions.
+  - `Partial`
+    - A lab guide with a difficulty of `Partial` includes full instructions to complete the exercise, with enough detail to where a user with moderate experience in the subject matter could complete the exercise. `Partial` lab guides provide a level of detail similar gto most typical technical documentation, where the user is expected to be able to configure their lab environment with dependencies required for the exercise, and to contextualize general instructions to the users own environment. 
+  - `Challenge`
+    - A lab guide with a difficulty of `Challenge` is designed to be technically challenging for the guide's target audience to complete. `Challenge` lab guides do not include comprehensive instructions, and intentionally leave out details required to complete exercises as a challenge or test of the users proficiency in a topic.
 
-Also please place all images inside expanding blocks, further details about images will be shown in step 1.4 below
+### Environment Pre-Requisites
 
+The demo in this document is conducted with a development TMC stack in which a Kind cluster is attached. 
+
+In order to demonstrate applying an image policy on a namespace, namespace space6 under the default workspace has been created using TMC. 
+
+<details><summary>Screenshot</summary>
+<img src="media/2020-03-06-02-05-38.png">
+<img src="media/2020-03-06-02-05-45.png">
 </details>
-<br/>
 
-1.2 Minor subsection headers
+## Lab Exercises
 
-1.2.1 if you have a substep that includes its own substeps, you need a subsection. This style guide offers two options for subsection handling, the minor subsection format shown here in step 1.2, and the major subsection format shown in step 1.3
+#### Step 1: Go to the page of policies and select Image Policy
 
-### 1.3 Major Subsection Headers
+Go to the page of policies by clicking Policies.
 
-Use major subsection headers whenever they are a better fit for the flow of your document. It is fine to use both minor and major subsection styles within the same document, so long as the overall flow and organization of the document make sense to the reader
-
-The rest of the text below is sample text copied from a lab exercise guide that uses this style
-
-1.3.1 Make a copy of the `frontend-deployment_all_k8s.yaml` file, save it as `frontend-deployment_ingress.yaml`
-
-Example:
-`cp frontend-deployment_all_k8s.yaml frontend-deployment_ingress.yaml`
-
-1.3.2 Get the URL of your smarcluster with the following command, be sure to replace 'afewell-cluster' with the name of your cluster:
-
-``` bash
-vke cluster show afewell-cluster | grep Address
-```
-
-<details><summary>Screenshot 1.3.2</summary>
-<img src="media/2018-10-20-15-45-19.png">
+<details><summary>Screenshot</summary>
+<img src="media/2020-03-06-02-06-34.png">
 </details>
-<br/>
 
-1.3.3 Edit the `frontend-deployment_ingress.yaml` file, near the bottom of the file in the ingress spec section, change the value for spec.rules.host to URL for your smartcluster as shown in the following snippet:
+Select Image Policy by clicking Image registry and then click WORKSPACES since image policies cannot be set at a cluster level.
 
-NOTE: Be sure to replace the URL shown here with the URL for your own smartcluster
+<details><summary>Screenshot</summary>
+<img src="media/2020-03-06-02-07-06.png">
+</details>
 
-``` bash
-spec:
-  rules:
-  - host: afewell-cluster-69fc65f8-d37d-11e8-918b-0a1dada1e740.fa2c1d78-9f00-4e30-8268-4ab81862080d.vke-user.com
-    http:
-      paths:
-      - backend:
-          serviceName: planespotter-frontend
-          servicePort: 80
-```
+#### Step 2: create an image policy 
 
-<details><summary>Click to expand to see the full contents of frontend-deployment_ingress.yaml</summary>
+Image policies can be created at an either workspace or namespace level. The policies set at a namespace and the policies set at its workspace(s) are additive for the namespace. For example, if namespace A has policy1 and namespace A's workspace E has policy2, then namespace A will have both policy1 and policy2 because it inherits policy2 from the parent workspace E.
 
-When reviewing the file contents below, observe that it includes a ClusterIP service spec which only provides an IP address that is usable for pod-to-pod communications in the cluster. The file also includes an ingress spec which implements the default VKE ingress controller.
+In this step, select the workspace/namespace in which we like to set up image policies. For example, here we select the default workspace and select space6. 
 
-In the following steps after you deploy the planespotter-frontend with ingress controller, you will be able to browse from your workstation to the running planespotter app in your VKE environment even though you have not assigned a nat or public IP for the service.
+After selecting the workspace namespace, image policies can be added. Click ADD POLICY after specifying policy name and image registry patterns. Each image registry pattern represents one or more registry domains from which images can be pulled for deployment in the workspace/namespace.
 
-Ingress controllers act as a proxies, recieving http/s requests from external clients and then based on the URL hostname or path, the ingress controller will proxy the request to the corresponding back-end service. For example mysite.com/path1 and mysite.com/path2 can be routed to different backing services running in the kubernetes cluster.
+<details><summary>Screenshot</summary>
+<img src="media/2020-03-06-02-08-29.png">
+</details>
 
-In the file below, no rules are specified to different paths and so accordingly, all requests sent to the host defined in the spec, your VKE SmartCluster URL, will be proxied by the ingress controller to the planespotter-frontend ClusterIP service also defined in the frontend-deployment_ingress.yaml file
+##### Step 2.1: Specify Wild Card matching
 
-``` bash
----
-apiVersion: apps/v1beta1
+As shown in the screenshot above, Wild Card matching is an optional feature supported by TMC. For example, "*.bintray.io" is allowed while " abc.*.bintray.io" and " abc.*" are not allowed.
+
+##### Step 2.2: Specify port number
+
+As shown in the screenshot above, specifying port number such as "*.harbor.com:6262" is an optional feature supported by TMC. Specifying port is only needed for registries using non-standard ports.
+
+
+#### Step 3: Deploying an application fails when the registry is not white listed
+
+In the attached cluster, try to create a deployment in a namespace where the policy is in effect, with an image pulled from a registry not in the image policy's registry list. For example, creating a busybox deployment as shown below. This deployment will fail as the application is pulled from docker which is not whitelisted.
+
+`kubectl apply -f imagePullingTest.yaml `
+
+<details><summary>Expand to see contents of imagePullingTest.yaml</summary>
+
+```yaml
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: planespotter-frontend
-  namespace: planespotter
-  labels:
-    app: planespotter-frontend
-    tier: frontend
+  name: busybox
+  namespace: space6
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: planespotter-frontend
+      app: test
   template:
     metadata:
       labels:
-        app: planespotter-frontend
-        tier: frontend
+        app: test
     spec:
       containers:
-      - name: planespotter-fe
-        image: yfauser/planespotter-frontend:d0b30abec8bfdbde01a36d07b30b2a3802d9ccbb
-        imagePullPolicy: IfNotPresent
-        env:
-        - name: PLANESPOTTER_API_ENDPOINT
-          value: planespotter-svc
-        - name: TIMEOUT_REG
-          value: "5"
-        - name: TIMEOUT_OTHER
-          value: "5"
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: planespotter-frontend
-  namespace: planespotter
-  labels:
-    app: planespotter-frontend
-spec:
-  ports:
-    # the port that this service should serve on
-    - port: 80
-  selector:
-    app: planespotter-frontend
----
-apiVersion: extensions/v1beta1
-kind: Ingress
-metadata:
-  name: planespotter-frontend
-  namespace: planespotter
-spec:
-  rules:
-  - host: afewell-cluster-69fc65f8-d37d-11e8-918b-0a1dada1e740.fa2c1d78-9f00-4e30-8268-4ab81862080d.vke-user.com
-    http:
-      paths:
-      - backend:
-          serviceName: planespotter-frontend
-          servicePort: 80
+        - image: busybox
+          command: [ "/bin/sh", "-c", "--" ]
+          args: [ "while true; printenv; do sleep 60; done;" ]
+          imagePullPolicy: IfNotPresent
+          name: busybox
 ```
-
-</details>
-<br/>
-
-1.3.4 Run the updated planespotter-frontend app and verify deployment with the following commands. Make note of the external IP address/hostname shown in the output of `kubectl get services`
-
-``` bash
-kubectl create -f frontend-deployment_ingress.yaml
-kubectl get pods
-kubectl get deployments
-kubectl get services
-kubectl get ingress
-kubectl describe ingress
-```
-
-<details><summary>Screenshot 1.3.4</summary>
-<img src="media/2018-10-20-16-11-14.png">
 </details>
 
-1.3.5 Open a browser and go to the url of your VKE SmartCluster to verify that planespotter-frontend is externally accessible with the LoadBalancer service
+We can verify enforcement by displaying the deployment status as shown below:
 
-<details><summary>Screenshot 5.5.5</summary>
-<img src="media/2018-10-20-16-26-46.png">
+`kubectl get deployment busybox -n space6 -o yaml`
+
+We can see the FailedCreate condition with a message as to which images failed to validate against the image policy: 
+
+<details><summary>Screenshot</summary>
+<img src="media/2020-03-06-02-13-43.png">
 </details>
-<br/>
 
-1.3.6 Clean up the planespotter-frontend components and verify with the following commands:
+#### Step 4: Deleting the application and image policy
 
-``` bash
-kubectl delete -f frontend-deployment_ingress.yaml
-kubectl get pods
-kubectl get deployments
-kubectl get services
-kubectl get ingress
-```
+Run the command below to delete the demo deployment.
 
-<details><summary>Screenshot 5.5.6</summary>
-<img src="media/2018-10-20-16-32-19.png">
-</details>
-<br/>
+`kubectl delete -f imagePullingTest.yaml`
 
-## Next Steps
+Delete the policy used in demo: go to the page of policies by clicking Policies in UI → click the workspace/namespace where the policy is set → click the policy and click delete.
 
-This lab provided an introductory overview of Kubernetes operations. Additional topics such as persistent volumes, network policy, config maps, stateful sets and more will be covered in more detail in the ongoing labs.
+#### Step 5: Deploying an application succeeds when image policy is not present
 
-If you are following the PKS Ninja cirriculum, [click here to proceed to the next lab](../Lab2-PksInstallationPhaseOne). As you proceed through the remaining labs you will learn more advanced details about Kubernetes using additional planespotter app components as examples and then deploy the complete planespotter application on a PKS environment.
+##### Step 5.1: Deploy the application
 
-If you are not following the PKS Ninja cirriculum and would like to deploy the complete planespotter app on VKE, you can find [complete deployment instructions here](https://github.com/Boskey/run_kubernetes_with_vmware)
+`kubectl apply -f imagePullingTest.yaml `
 
-### Thank you for completing the Introduction to Kubernetes Lab!
+##### Step 5.2: Validating that the application is functioning
 
-### [Please click here to proceed to Lab2: PKS Installation Phase 1](../Lab2-PksInstallationPhaseOne)
+Verify that the application is working normally.
+
+`kubectl get deployment busybox -n space6 -o yaml`
+
+##### Step 5.3: Cleaning up the application and namespace
+
+Clean-up the application with the following command:
+
+`kubectl delete -f imagePullingTest.yaml`
+
+Now delete the namespace "space6" to complete the clean-up.
+
+### Validate Lab Guide
+
+If you were able to complete this lab successfully without any significant problems, please sign the [validate.md](./validate.md) file located in this directory. 
+
+If you encountered any problems or have suggestions or feature requests, please open an issue ticket on this repository. 
+
+If you have any updates or improvements for this lab guide, please open a PR with your updates.
+
+### Thank you for completing the Tanzu Mission Control - Image Policies Lab Guide!
